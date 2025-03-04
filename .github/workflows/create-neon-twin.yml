@@ -1,4 +1,4 @@
-name: Generate Data
+name: Create Anonymized Neon Twin
 
 on:
   schedule:
@@ -12,7 +12,7 @@ env:
   PG_VERSION: 16
 
 jobs:
-  dump-schema:
+  dump-and-restore:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,26 +37,20 @@ jobs:
       - name: Set PostgreSQL binary path
         run: echo "POSTGRES=/usr/lib/postgresql/${{ env.PG_VERSION }}/bin" >> $GITHUB_ENV
 
-      - name: Dump schema (SQL format)
+      - name: Dump schema (SQL)
         run: |
           $POSTGRES/pg_dump --schema-only "${{ env.PROD_DATABASE_URL }}" > schema.sql
 
-      - name: Dump schema (custom format for pg_restore)
+      - name: Dump schema (.bak)
         run: |
-          $POSTGRES/pg_dump --schema-only --format=custom "${{ env.PROD_DATABASE_URL }}" > schema.bak
+          $POSTGRES/pg_dump -Fc --schema-only -f "${{ github.workspace }}/schema.bak" "${{ env.PROD_DATABASE_URL }}"
 
-      - name: Upload schema as artifact
+      - name: Upload sql schema as artifact
         uses: actions/upload-artifact@v4
         with:
           name: database-schema
-          path: |
-            schema.sql
-            schema.bak
+          path: schema.sql
           retention-days: 1
-
-      - name: Generate data
-        run: |
-          node .github/scripts/generate-data.mjs
 
       - name: Drop tables and schema
         run: |
@@ -65,8 +59,12 @@ jobs:
 
       - name: Restore schema
         run: |
-          $POSTGRES/pg_restore --clean --no-owner --no-acl --if-exists --schema-only -d "${{ env.DEV_DATABASE_URL }}" schema.bak
+          $POSTGRES/pg_restore --clean --no-owner --no-acl --if-exists --schema-only -d "${{ env.DEV_DATABASE_URL }}" "${{ github.workspace }}/schema.bak"
 
-      - name: Execute SQL on Development Database
+      - name: Generate anonymized data
         run: |
-          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -f data.sql
+          node .github/scripts/generate-data.mjs
+
+      - name: Restore generated data
+        run: |
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -f data.sql || true
