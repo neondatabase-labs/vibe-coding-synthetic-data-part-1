@@ -1,0 +1,27 @@
+name: Clean (Temp)
+
+on:
+  workflow_dispatch:
+
+env:
+  DEV_DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+  PG_VERSION: 16
+
+jobs:
+  dump-schema:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install PostgreSQL
+        run: |
+          sudo apt update
+          yes '' | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          sudo apt install -y postgresql-${{ env.PG_VERSION }}
+
+      - name: Set PostgreSQL binary path
+        run: echo "POSTGRES=/usr/lib/postgresql/${{ env.PG_VERSION }}/bin" >> $GITHUB_ENV
+
+      - name: Drop tables and schema
+        run: |
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -c "DROP SCHEMA IF EXISTS public CASCADE;"
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -c "CREATE SCHEMA public;"
