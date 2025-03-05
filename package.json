@@ -21,6 +21,7 @@
   "dependencies": {
     "@actions/artifact": "^2.2.2",
     "@anthropic-ai/sdk": "^0.39.0",
+    "@faker-js/faker": "^9.5.1",
     "dotenv": "^16.4.7"
   }
 }
