@@ -1,4 +1,4 @@
-name: Create Anonymized Neon Twin
+name: Create Synthetic Neon Twin
 
 on:
   schedule:
@@ -12,7 +12,7 @@ env:
   PG_VERSION: 16
 
 jobs:
-  dump-and-restore:
+  dump-generate-and-restore:
     runs-on: ubuntu-latest
 
     steps:
