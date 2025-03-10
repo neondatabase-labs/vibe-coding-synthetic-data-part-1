@@ -1,5 +1,5 @@
 {
-  "name": "test-ai-data-gen",
+  "name": "vibe-coding-synthetic-data",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PaulieScanlon/test-ai-data-gen.git"
+    "url": "git+https://github.com/neondatabase-labs/vibe-coding-synthetic-data.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/PaulieScanlon/test-ai-data-gen/issues"
+    "url": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data/issues"
   },
-  "homepage": "https://github.com/PaulieScanlon/test-ai-data-gen#readme",
+  "homepage": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data#readme",
   "dependencies": {
     "@actions/artifact": "^2.2.2",
     "@anthropic-ai/sdk": "^0.39.0",
