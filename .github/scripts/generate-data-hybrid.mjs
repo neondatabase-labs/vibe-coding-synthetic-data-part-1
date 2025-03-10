@@ -55,6 +55,7 @@ import { faker } from '@faker-js/faker';
     });
 
     const generatedCode = msg.content[0].text.trim();
+    console.log(generatedCode);
 
     const generateTestData = new Function('faker', generatedCode);
     console.log(generateTestData);
