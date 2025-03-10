@@ -61,7 +61,7 @@ jobs:
         run: |
           $POSTGRES/pg_restore --clean --no-owner --no-acl --if-exists --schema-only -d "${{ env.DEV_DATABASE_URL }}" "${{ github.workspace }}/schema.bak"
 
-      - name: Generate anonymized data
+      - name: Generate data
         run: |
           node .github/scripts/generate-data-hybrid.mjs
 

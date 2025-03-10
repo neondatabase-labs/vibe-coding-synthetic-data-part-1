@@ -7,7 +7,7 @@ import fs from 'fs/promises';
     const schemaDump = await fs.readFile('schema.sql', 'utf8');
     console.log('Schema file read successfully');
 
-    const totalRows = 100;
+    const totalRows = 50;
     console.log(`Create ${totalRows} rows of data`);
 
     const anthropic = new Anthropic({
