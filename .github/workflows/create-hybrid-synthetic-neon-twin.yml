@@ -1,0 +1,70 @@
+name: Create Hybrid Synthetic Neon Twin
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs at midnight UTC
+  workflow_dispatch:
+
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  PROD_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+  DEV_DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+  PG_VERSION: 16
+
+jobs:
+  dump-generate-and-restore:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm install
+
+      - name: Install PostgreSQL
+        run: |
+          sudo apt update
+          yes '' | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+          sudo apt install -y postgresql-${{ env.PG_VERSION }}
+
+      - name: Set PostgreSQL binary path
+        run: echo "POSTGRES=/usr/lib/postgresql/${{ env.PG_VERSION }}/bin" >> $GITHUB_ENV
+
+      - name: Dump schema (SQL)
+        run: |
+          $POSTGRES/pg_dump --schema-only "${{ env.PROD_DATABASE_URL }}" > schema.sql
+
+      - name: Dump schema (.bak)
+        run: |
+          $POSTGRES/pg_dump -Fc --schema-only -f "${{ github.workspace }}/schema.bak" "${{ env.PROD_DATABASE_URL }}"
+
+      - name: Upload sql schema as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-schema
+          path: schema.sql
+          retention-days: 1
+
+      - name: Drop tables and schema
+        run: |
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -c "DROP SCHEMA IF EXISTS public CASCADE;"
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -c "CREATE SCHEMA public;"
+
+      - name: Restore schema
+        run: |
+          $POSTGRES/pg_restore --clean --no-owner --no-acl --if-exists --schema-only -d "${{ env.DEV_DATABASE_URL }}" "${{ github.workspace }}/schema.bak"
+
+      - name: Generate anonymized data
+        run: |
+          node .github/scripts/generate-data-hybrid.mjs
+
+      - name: Restore generated data
+        run: |
+          $POSTGRES/psql "${{ env.DEV_DATABASE_URL }}" -f data.sql || true

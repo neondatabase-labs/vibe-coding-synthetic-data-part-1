@@ -5,20 +5,18 @@ import { faker } from '@faker-js/faker';
 
 (async () => {
   try {
-    // Fetch schema from file
     const schemaDump = await fs.readFile('schema.sql', 'utf8');
     console.log('Schema file read successfully');
 
-    const totalRows = 100;
+    const totalRows = 10;
+    console.log(`Create ${totalRows} rows of data`);
 
-    console.log(`Step 1: Generating ${totalRows} rows of data for parent tables...`);
-
-    // Initialize the Anthropic LLM client
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
-    // Send the request to generate the faker.js function
+    console.log('Calling Anthropic API...');
+
     const msg = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 8192,
@@ -56,13 +54,10 @@ import { faker } from '@faker-js/faker';
       ],
     });
 
-    // Get the generated data generation code from LLM response
     const generatedCode = msg.content[0].text.trim();
 
-    // Dynamically create the function body from LLM response
     const generateTestData = new Function('faker', generatedCode);
 
-    // Call the function with the globally available `faker`
     let result;
     try {
       result = generateTestData(faker);
@@ -71,7 +66,6 @@ import { faker } from '@faker-js/faker';
       return;
     }
 
-    // Generate SQL INSERT statements dynamically
     const generateSQLInsertStatements = (result) => {
       return Object.entries(result)
         .map(([table, rows]) => {
@@ -87,13 +81,12 @@ import { faker } from '@faker-js/faker';
                     let value = row[column];
 
                     if (value instanceof Date) {
-                      // Format date values to 'YYYY-MM-DD HH:MM:SS'
                       const formattedDate = value.toISOString().slice(0, 19).replace('T', ' ');
-                      return `'${formattedDate}'`; // Wrap in single quotes
+                      return `'${formattedDate}'`;
                     }
 
                     if (typeof value === 'string') {
-                      return `'${value.replace(/'/g, "''")}'`; // Escape single quotes in strings
+                      return `'${value.replace(/'/g, "''")}'`;
                     }
 
                     if (value === null || value === undefined) {
@@ -104,11 +97,11 @@ import { faker } from '@faker-js/faker';
                   })
                   .join(', ') +
                 ')'
-              ); // Wrap each row's values in parentheses
+              );
             })
-            .join(',\n'); // Join multiple rows with commas
+            .join(',\n');
 
-          return `INSERT INTO public.${table} (${columnNames}) VALUES\n${values};`; // Added 'public.' before the table name
+          return `INSERT INTO public.${table} (${columnNames}) VALUES\n${values};`;
         })
         .join('\n');
     };
@@ -116,9 +109,7 @@ import { faker } from '@faker-js/faker';
     const sqlInsertStatements = generateSQLInsertStatements(result);
     console.log(sqlInsertStatements);
 
-    // Write SQL file to be picked up by Action
     await fs.writeFile('data.sql', sqlInsertStatements);
-    console.log('SQL file generated successfully');
   } catch (error) {
     console.error('Error:', error.message);
     process.exit(1);

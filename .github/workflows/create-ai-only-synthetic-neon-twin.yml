@@ -1,4 +1,4 @@
-name: Create Synthetic Neon Twin
+name: Create AI Only Synthetic Neon Twin
 
 on:
   schedule:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Generate anonymized data
         run: |
-          node .github/scripts/generate-data.mjs
+          node .github/scripts/generate-data-ai-only.mjs
 
       - name: Restore generated data
         run: |
