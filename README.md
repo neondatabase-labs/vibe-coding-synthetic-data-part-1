@@ -6,7 +6,7 @@ For more information, check out the blog post: [Vibe Coding With AI to Generate 
 
 ## Getting Started
 
-To run the GitHub Actions, two PostgreSQL databases are required:
+Two PostgreSQL databases are required:
 
 1. The first database should be the production database, containing both the data and schema.
 2. The second should be an empty database.
@@ -19,8 +19,8 @@ To run the GitHub Actions, two PostgreSQL databases are required:
 1. Rename `.env.example` to `.env` to configure the environment.
 2. Install the dependencies.
 3. Run one of the following commands from your terminal:
-   a. `node .github/scripts/generate-data-ai-only.mjs`
-   b. `node .github/scripts/generate-data-hybrid.mjs`
+   - `node .github/scripts/generate-data-ai-only.mjs`
+   - `node .github/scripts/generate-data-hybrid.mjs`
 
 ### Working with Actions
 
