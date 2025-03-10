@@ -7,7 +7,7 @@ import fs from 'fs/promises';
     const schemaDump = await fs.readFile('schema.sql', 'utf8');
     console.log('Schema file read successfully');
 
-    const totalRows = 50;
+    const totalRows = 100;
     console.log(`Create ${totalRows} rows of data`);
 
     const anthropic = new Anthropic({
@@ -17,7 +17,8 @@ import fs from 'fs/promises';
     console.log('Calling Anthropic API...');
 
     const msg = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      // model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-7-sonnet-20250219',
       max_tokens: 8192,
       system:
         'You are a seasoned database administrator responsible for generating realistic test data while maintaining referential integrity.',
