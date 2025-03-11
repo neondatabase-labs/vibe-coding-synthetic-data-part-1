@@ -8,7 +8,7 @@ import { faker } from '@faker-js/faker';
     const schemaDump = await fs.readFile('schema.sql', 'utf8');
     console.log('Schema file read successfully');
 
-    const totalRows = 3000;
+    const totalRows = 10;
     console.log(`Create ${totalRows} rows of data`);
 
     const anthropic = new Anthropic({
