@@ -8,7 +8,7 @@ For more information, check out the blog post: [Vibe Coding With AI to Generate 
 
 Two PostgreSQL databases are required:
 
-1. The first database should be the production database, containing both the data and schema.
+1. The first database should be the production database, containing schema (data is optional).
 2. The second should be an empty database.
 3. Both databases must use the same version of PostgreSQL.
 4. The PostgreSQL version installed on the Action's runner should match the versions of the databases.
