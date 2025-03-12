@@ -1,4 +1,4 @@
-# Vibe Coding Synthetic Data
+# Vibe Coding Synthetic Data: Part 1
 
 This project explores how well general-purpose AI models, such as Anthropic's Claude-3-5-Sonnet-20241022, can generate synthetic datasets. The goal is to evaluate the model’s ability to understand and replicate database schemas, generate realistic data, and maintain the integrity and relationships between the data.
 

@@ -1,5 +1,5 @@
 {
-  "name": "vibe-coding-synthetic-data",
+  "name": "vibe-coding-synthetic-data-part-1",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neondatabase-labs/vibe-coding-synthetic-data.git"
+    "url": "git+https://github.com/neondatabase-labs/vibe-coding-synthetic-data-part-1.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data/issues"
+    "url": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data-part-1/issues"
   },
-  "homepage": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data#readme",
+  "homepage": "https://github.com/neondatabase-labs/vibe-coding-synthetic-data-part-1#readme",
   "dependencies": {
     "@actions/artifact": "^2.2.2",
     "@anthropic-ai/sdk": "^0.39.0",
