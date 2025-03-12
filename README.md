@@ -2,7 +2,7 @@
 
 This project explores how well general-purpose AI models, such as Anthropic's Claude-3-5-Sonnet-20241022, can generate synthetic datasets. The goal is to evaluate the model’s ability to understand and replicate database schemas, generate realistic data, and maintain the integrity and relationships between the data.
 
-For more information, check out the blog post: [Vibe Coding With AI to Generate Synthetic Data](https://neon.tech/blog)
+For more information, check out the blog post: [Vibe Coding With AI to Generate Synthetic Data: Part 1](https://neon.tech/blog)
 
 ## Getting Started
 
